@@ -170,7 +170,7 @@ This project is released under the [MIT License](LICENSE).
 ## Contact
 
 **Pietro Gelmini** — [gelmini.pietro@gmail.com](mailto:gelmini.pietro@gmail.com)
-LinkedIn: [linkedin.com/in/yourprofile](https://www.linkedin.com/in/pietro-gelmini/)
+LinkedIn: [https://www.linkedin.com/in/pietro-gelmini/](https://www.linkedin.com/in/pietro-gelmini/)
 
 ---
 
