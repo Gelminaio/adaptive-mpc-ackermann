@@ -25,17 +25,17 @@ This project investigates terrain-adaptive trajectory tracking for small-scale a
     <td width="33%" align="center" valign="top">
       <img src="media/vehicle_photos/02_side_view.jpg" alt="Side view" width="100%"/>
       <br/><em>Side view</em>
-      <br/><sub>Three-layer chassis: sensor stack, electronics, battery and motors.</sub>
+      <br/><sub>Three-tier chassis hosting sensors, control electronics, and power distribution.</sub>
     </td>
     <td width="33%" align="center" valign="top">
       <img src="media/vehicle_photos/03_top_view.jpg" alt="Top view" width="80%"/>
       <br/><em>Top view</em>
-      <br/><sub>Sensor and compute layout — LIDAR, IMU, ESP32, Pi 4B.</sub>
+      <br/><sub>Sensor and compute layout — RPLIDAR A1, BNO085 IMU, ESP32, Pi Camera, XL4015 buck converter.</sub>
     </td>
     <td width="33%" align="center" valign="top">
       <img src="media/vehicle_photos/04_electronics_detail.jpg" alt="Electronics detail" width="80%"/>
       <br/><em>Electronics detail</em>
-      <br/><sub>ESP32 + BNO085 IMU over I2C; Raspberry Pi 4B host; CSI camera interface.</sub>
+      <br/><sub>ESP32 microcontroller with BNO085 9-DoF IMU over I2C, alongside the RPLIDAR USB adapter and Raspberry Pi 4B host.</sub>
     </td>
   </tr>
 </table>
