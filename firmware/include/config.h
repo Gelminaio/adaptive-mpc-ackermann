@@ -22,6 +22,14 @@ constexpr int PIN_ENCODER_R_B = 35;
 constexpr int PIN_ENCODER_L_A = 36;
 constexpr int PIN_ENCODER_L_B = 39;
 
+// Encoder driver constants
+constexpr uint16_t ENCODER_GLITCH_FILTER_NS = 1000; // ignore pulses <1us (motor noise rejection)
+constexpr uint32_t ENCODER_VELOCITY_WINDOW_MS = 20; // velocity computed over this window
+
+// PCNT unit assignments (ESP32 has 8 PCNT units: 0-7)
+constexpr int ENCODER_R_PCNT_UNIT = 0;
+constexpr int ENCODER_L_PCNT_UNIT = 1;
+
 // Steering servo
 constexpr int PIN_SERVO_STEERING = 33;
 constexpr float SERVO_ANGLE_MAX_DEG = 30.0f;
@@ -40,8 +48,8 @@ constexpr int MOTOR_L_FWD_LEDC_CHANNEL = 4;
 constexpr int MOTOR_L_REV_LEDC_CHANNEL = 5;
 
 // Motor control constants
-constexpr int16_t  MOTOR_DUTY_MAX = 1023;
-constexpr int16_t  MOTOR_DUTY_MIN = -1023;
+constexpr int16_t MOTOR_DUTY_MAX = 1023;
+constexpr int16_t MOTOR_DUTY_MIN = -1023;
 constexpr uint32_t MOTOR_DEAD_TIME_MS = 50; 
 
 // LED
@@ -49,21 +57,21 @@ constexpr int PIN_LED = 2;
 
 // PWM (LEDC) settings
 constexpr uint32_t MOTOR_PWM_FREQ_HZ = 20000;   
-constexpr uint8_t  MOTOR_PWM_RESOLUTION = 10;    
+constexpr uint8_t MOTOR_PWM_RESOLUTION = 10;    
 constexpr uint32_t SERVO_PWM_FREQ_HZ = 50;      
-constexpr uint8_t  SERVO_PWM_RESOLUTION = 16;    
+constexpr uint8_t SERVO_PWM_RESOLUTION = 16;    
 
 // Vehicle physical parameters
 // TODO: refine these values with precise measurements in Phase 5 (System ID)
-constexpr float WHEEL_RADIUS_M = 0.0325f; 
-constexpr float WHEELBASE_M = 0.165f;   
-constexpr float TRACK_WIDTH_M = 0.145f;    
-constexpr int   ENCODER_TICKS_PER_REV = 1440;  
-constexpr float GEAR_RATIO = 1.0f;    
+constexpr float WHEEL_RADIUS_M = 0.03415f; // (specific for my motor) 
+constexpr float WHEELBASE_M = 0.16966f; // "passo della macchina" (specific for my motor)  
+constexpr float TRACK_WIDTH_M = 0.1745f; // (specific for my motor)    
+constexpr int ENCODER_TICKS_PER_REV = 660; // measured (specific for my motor)  
+constexpr float GEAR_RATIO = 1.0f; 
 
 // Control & safety limits
-constexpr float VEHICLE_MAX_LINEAR_VEL_MPS = 2.0f;
-constexpr float VEHICLE_MAX_ANGULAR_VEL_RPS = 3.0f;
+constexpr float VEHICLE_MAX_LINEAR_VEL_MPS = 0.3f;
+constexpr float VEHICLE_MAX_ANGULAR_VEL_RPS = 1.0f;
 constexpr uint32_t CMD_TIMEOUT_MS = 500;       
 
 // Task timing (periods in ms)

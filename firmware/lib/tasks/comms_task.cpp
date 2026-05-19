@@ -39,6 +39,22 @@ static void process_line(const String& line) {
             Serial.printf("[comms] motors set L=%d R=%d\n", actual_l, actual_r);
             break;
         }
+        case 'e': {
+            const int32_t cl = g_encoder_left.getCount();
+            const int32_t cr = g_encoder_right.getCount();
+            const float   vl = g_encoder_left.getVelocityMps();
+            const float   vr = g_encoder_right.getVelocityMps();
+            Serial.printf("[comms] enc L: %ld ticks, %.3f m/s | R: %ld ticks, %.3f m/s\n",
+                          cl, vl, cr, vr);
+            break;
+        }
+        case 'r': {
+            // Reset both encoder counts
+            g_encoder_left.resetCount();
+            g_encoder_right.resetCount();
+            Serial.println("[comms] encoder counts reset to zero");
+            break;
+        }
         case 'x': {
             // emergency coast!
             g_motor_left.coast();
@@ -71,6 +87,8 @@ void comms_task(void* params) {
     Serial.println("[comms] ready. Commands:");
     Serial.println("[comms]   s <angle>          → steering angle (deg)");
     Serial.println("[comms]   m <left> <right>   → motor duty (-1023..+1023)");
+    Serial.println("[comms]   e                  → print encoder state");
+    Serial.println("[comms]   r                  → reset encoder counts");
     Serial.println("[comms]   x                  → emergency coast");
     Serial.println("[comms]   ?                  → query state");
 

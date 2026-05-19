@@ -3,6 +3,7 @@
 #include "globals.h"
 #include "servo_driver.h"
 #include "motor_driver.h"
+#include "encoder_driver.h"
 #include "config.h"
 #include "vehicle_state.h"
 
@@ -17,6 +18,8 @@
 drivers::ServoDriver g_servo;
 drivers::MotorDriver g_motor_left(PIN_MOTOR_L_PWM_FWD, PIN_MOTOR_L_PWM_REV, MOTOR_L_FWD_LEDC_CHANNEL, MOTOR_L_REV_LEDC_CHANNEL, "left", true);
 drivers::MotorDriver g_motor_right(PIN_MOTOR_R_PWM_FWD, PIN_MOTOR_R_PWM_REV, MOTOR_R_FWD_LEDC_CHANNEL, MOTOR_R_REV_LEDC_CHANNEL, "right");
+drivers::EncoderDriver g_encoder_left(PIN_ENCODER_L_A, PIN_ENCODER_L_B, ENCODER_L_PCNT_UNIT, "left", true);
+drivers::EncoderDriver g_encoder_right(PIN_ENCODER_R_A, PIN_ENCODER_R_B, ENCODER_R_PCNT_UNIT, "right");
 VehicleState         g_vehicle_state;
 VehicleCommand       g_vehicle_command;
 
@@ -42,6 +45,13 @@ void setup() {
     }
     if (!g_motor_right.begin()) {
         Serial.println("FATAL: right motor driver init failed");
+    }
+    //encoders left and right
+    if (!g_encoder_left.begin()) {
+        Serial.println("FATAL: left encoder init failed");
+    }
+    if (!g_encoder_right.begin()) {
+        Serial.println("FATAL: right encoder init failed");
     }
     // Create FreeRTOS tasks
     xTaskCreatePinnedToCore(

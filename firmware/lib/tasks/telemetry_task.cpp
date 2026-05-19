@@ -1,27 +1,31 @@
 #include "telemetry_task.h"
 
 #include "config.h"
+#include "globals.h"
 
-namespace tasks {
+namespace tasks
+{
 
-void telemetry_task(void* params) {
-    (void)params;
+    void telemetry_task(void *params)
+    {
+        (void)params;
 
-    const TickType_t period_ticks = pdMS_TO_TICKS(PERIOD_TELEMETRY_MS);
-    TickType_t last_wake = xTaskGetTickCount();
+        const TickType_t period_ticks = pdMS_TO_TICKS(PERIOD_TELEMETRY_MS);
+        TickType_t last_wake = xTaskGetTickCount();
 
-    uint32_t heartbeat_counter = 0;
+        while (true)
+        {
+            const uint32_t t_ms = millis();
+            const int32_t cl = g_encoder_left.getCount();
+            const int32_t cr = g_encoder_right.getCount();
+            const float vl = g_encoder_left.getVelocityMps();
+            const float vr = g_encoder_right.getVelocityMps();
 
-    while (true) {
-        // TODO: structured telemetry output for plotting/logging
+            Serial.printf("TELEM,%lu,%ld,%ld,%.3f,%.3f\n",
+                          t_ms, cl, cr, vl, vr);
 
-        if (++heartbeat_counter >= 10) {  
-            heartbeat_counter = 0;
-            Serial.printf("[telemetry] heartbeat @ %lu ms\n", millis());
+            vTaskDelayUntil(&last_wake, period_ticks);
         }
-
-        vTaskDelayUntil(&last_wake, period_ticks);
     }
-}
 
-}  
+}
