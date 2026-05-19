@@ -6,11 +6,39 @@
 
 A 1:10 scale autonomous vehicle platform implementing **adaptive Nonlinear Model Predictive Control** with **proprioceptive terrain classification** for robust navigation across heterogeneous surfaces.
 
+<p align="center">
+  <img src="media/vehicle_photos/01_hero.jpg" alt="Vehicle Hero Shot" width="65%"/>
+</p>
+
 ---
 
 ## Abstract
 
 This project investigates terrain-adaptive trajectory tracking for small-scale autonomous ground vehicles. A Nonlinear MPC controller, formulated on an identified dynamic bicycle model, regulates trajectory tracking under nonholonomic Ackermann constraints. An online proprioceptive terrain classifier — operating on inertial measurements alone — estimates the surface type at runtime, and the MPC cost weights and constraints are adapted accordingly. The full stack runs distributed over a ROS 2 Jazzy network spanning an ESP32 real-time controller, a Raspberry Pi 4 perception bridge, and a base-station GPU host. Validation is performed both in simulation (sim-to-real pipeline) and on the physical platform across multiple terrain types.
+
+---
+
+## Vehicle Platform
+
+<table align="center">
+  <tr>
+    <td width="33%" align="center" valign="top">
+      <img src="media/vehicle_photos/02_side_view.jpg" alt="Side view" width="100%"/>
+      <br/><em>Side view</em>
+      <br/><sub>Three-tier chassis hosting sensors, control electronics, and power distribution.</sub>
+    </td>
+    <td width="33%" align="center" valign="top">
+      <img src="media/vehicle_photos/03_top_view.jpg" alt="Top view" width="80%"/>
+      <br/><em>Top view</em>
+      <br/><sub>Sensor and compute layout — RPLIDAR A1, BNO085 IMU, ESP32, XL4015 buck converter.</sub>
+    </td>
+    <td width="33%" align="center" valign="top">
+      <img src="media/vehicle_photos/04_electronics_detail.jpg" alt="Electronics detail" width="80%"/>
+      <br/><em>Electronics detail</em>
+      <br/><sub>ESP32 microcontroller with BNO085 9-DoF IMU over I2C, alongside the RPLIDAR USB adapter and Raspberry Pi 4B host.</sub>
+    </td>
+  </tr>
+</table>
 
 ---
 
