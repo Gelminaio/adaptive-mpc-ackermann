@@ -30,7 +30,7 @@ This project investigates terrain-adaptive trajectory tracking for small-scale a
     <td width="33%" align="center" valign="top">
       <img src="media/vehicle_photos/03_top_view.jpg" alt="Top view" width="80%"/>
       <br/><em>Top view</em>
-      <br/><sub>Sensor and compute layout — RPLIDAR A1, BNO085 IMU, ESP32, Pi Camera, XL4015 buck converter.</sub>
+      <br/><sub>Sensor and compute layout — RPLIDAR A1, BNO085 IMU, ESP32, XL4015 buck converter.</sub>
     </td>
     <td width="33%" align="center" valign="top">
       <img src="media/vehicle_photos/04_electronics_detail.jpg" alt="Electronics detail" width="80%"/>
