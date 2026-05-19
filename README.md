@@ -1,14 +1,14 @@
 # Terrain-Adaptive Model Predictive Control for Autonomous Ackermann Vehicles
 
-<p align="center">
-  <img src="media/vehicle_photos/01_hero.jpg" alt="Vehicle Hero Shot" width="65%"/>
-</p>
-
 [![Build](https://github.com/Gelminaio/adaptive-mpc-ackermann/actions/workflows/build.yml/badge.svg)](https://github.com/Gelminaio/adaptive-mpc-ackermann/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![ROS 2 Jazzy](https://img.shields.io/badge/ROS%202-Jazzy-blue)](https://docs.ros.org/en/jazzy/)
 
 A 1:10 scale autonomous vehicle platform implementing **adaptive Nonlinear Model Predictive Control** with **proprioceptive terrain classification** for robust navigation across heterogeneous surfaces.
+
+<p align="center">
+  <img src="media/vehicle_photos/01_hero.jpg" alt="Vehicle Hero Shot" width="65%"/>
+</p>
 
 ---
 
@@ -20,26 +20,25 @@ This project investigates terrain-adaptive trajectory tracking for small-scale a
 
 ## Vehicle Platform
 
-## Vehicle Platform
-
 <table align="center">
   <tr>
-    <td width="50%" align="center">
-      <img src="media/vehicle_photos/02_side_view.jpg" alt="Side view" width="95%"/><br/>
-      <em>Side view — three-layer chassis with sensor stack, electronics, and battery</em>
+    <td width="33%" align="center" valign="top">
+      <img src="media/vehicle_photos/02_side_view.jpg" alt="Side view" width="100%"/>
+      <br/><em>Side view</em>
+      <br/><sub>Three-layer chassis: sensor stack, electronics, battery and motors.</sub>
     </td>
-    <td width="50%" align="center">
-      <img src="media/vehicle_photos/03_top_view.jpg" alt="Top view" width="60%"/><br/>
-      <em>Top view — sensor and compute layout</em>
+    <td width="33%" align="center" valign="top">
+      <img src="media/vehicle_photos/03_top_view.jpg" alt="Top view" width="80%"/>
+      <br/><em>Top view</em>
+      <br/><sub>Sensor and compute layout — LIDAR, IMU, ESP32, Pi 4B.</sub>
+    </td>
+    <td width="33%" align="center" valign="top">
+      <img src="media/vehicle_photos/04_electronics_detail.jpg" alt="Electronics detail" width="80%"/>
+      <br/><em>Electronics detail</em>
+      <br/><sub>ESP32 + BNO085 IMU over I2C; Raspberry Pi 4B host; CSI camera interface.</sub>
     </td>
   </tr>
 </table>
-
-<p align="center">
-  <img src="media/vehicle_photos/04_electronics_detail.jpg" alt="Electronics detail" width="50%"/>
-</p>
-
-<p align="center"><em>Electronics detail: ESP32 microcontroller with BNO085 9-DoF IMU (I2C), Raspberry Pi 4B host, and CSI camera interface.</em></p>
 
 ---
 
