@@ -5,10 +5,6 @@
 
 namespace tasks {
 
-// Simple line-based serial parser.
-// Supported commands:
-//   s <angle>      → set steering angle in degrees (from -30 to 30) (example: > s 15.0)
-//   ?              → print current servo degrees
 static void process_line(const String& line) {
     String trimmed = line;
     trimmed.trim();
@@ -30,8 +26,31 @@ static void process_line(const String& line) {
             }
             break;
         }
+        case 'm': {
+            int left  = 0;
+            int right = 0;
+            const int parsed = sscanf(args.c_str(), "%d %d", &left, &right);
+            if (parsed != 2) {
+                Serial.println("[comms] usage: m <left_duty> <right_duty>");
+                break;
+            }
+            const int16_t actual_l = g_motor_left.setDuty(static_cast<int16_t>(left));
+            const int16_t actual_r = g_motor_right.setDuty(static_cast<int16_t>(right));
+            Serial.printf("[comms] motors set L=%d R=%d\n", actual_l, actual_r);
+            break;
+        }
+        case 'x': {
+            // emergency coast!
+            g_motor_left.coast();
+            g_motor_right.coast();
+            Serial.println("[comms] EMERGENCY COAST: motors stopped");
+            break;
+        }
         case '?': {
-            Serial.printf("[comms] servo angle = %.2f deg\n", g_servo.getAngle());
+            Serial.printf("[comms] servo=%.2f deg, motor L=%d, motor R=%d\n",
+                          g_servo.getAngle(),
+                          g_motor_left.getDuty(),
+                          g_motor_right.getDuty());
             break;
         }
         default:
@@ -49,7 +68,11 @@ void comms_task(void* params) {
     String line_buffer;
     uint32_t heartbeat_counter = 0;
 
-    Serial.println("[comms] ready. Commands: 's <angle>' to steer, '?' to query.");
+    Serial.println("[comms] ready. Commands:");
+    Serial.println("[comms]   s <angle>          → steering angle (deg)");
+    Serial.println("[comms]   m <left> <right>   → motor duty (-1023..+1023)");
+    Serial.println("[comms]   x                  → emergency coast");
+    Serial.println("[comms]   ?                  → query state");
 
     while (true) {
         while (Serial.available()) {
