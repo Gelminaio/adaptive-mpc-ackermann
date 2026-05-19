@@ -7,7 +7,8 @@
 // Vehicle command (received from ROS via /cmd_vel)
 struct VehicleCommand {
     float linear_vel_mps = 0.0f;  
-    float angular_vel_rps = 0.0f; 
+    float angular_vel_rps = 0.0f;
+    float steering_angle_deg = 0.0f; 
     uint32_t timestamp_ms = 0;   
     bool armed = false;          
 };

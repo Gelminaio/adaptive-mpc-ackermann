@@ -1,5 +1,7 @@
 #include <Arduino.h>
 
+#include "globals.h"
+#include "servo_driver.h"
 #include "config.h"
 #include "vehicle_state.h"
 
@@ -11,10 +13,9 @@
 
 
 // global shared state, in future steps will be protected with mutex.
-
-VehicleState g_vehicle_state;
-VehicleCommand g_vehicle_command;
-
+drivers::ServoDriver g_servo;
+VehicleState         g_vehicle_state;
+VehicleCommand       g_vehicle_command;
 
 // Setup: hardware bring-up + task creation, then return forever.
 void setup() {
@@ -27,6 +28,11 @@ void setup() {
     pinMode(PIN_LED, OUTPUT);
     digitalWrite(PIN_LED, HIGH);
 
+    // Initialize hardware drivers
+    if (!g_servo.begin()) {
+        Serial.println("FATAL: servo driver init failed");
+    }
+    
     // Create FreeRTOS tasks
     xTaskCreatePinnedToCore(
         tasks::safety_task,         "safety",
