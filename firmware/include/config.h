@@ -27,6 +27,14 @@ constexpr int PIN_SERVO_STEERING = 33;
 constexpr float SERVO_ANGLE_MAX_DEG = 30.0f;
 constexpr float SERVO_ANGLE_MIN_DEG = -30.0f;
 
+// PWM pulse-width calibration in microseconds (established through some tests)
+constexpr uint32_t SERVO_PULSE_CENTER_US = 1460;   // straight wheels (0° degrees)
+constexpr uint32_t SERVO_PULSE_LEFT_US   = 960;   // full left  (-30 degrees)
+constexpr uint32_t SERVO_PULSE_RIGHT_US  = 1960;   // full right (+30 degrees)
+
+// LEDC channel assignment for servo
+constexpr int SERVO_LEDC_CHANNEL = 0;
+
 // LED
 constexpr int PIN_LED = 2;          
 
