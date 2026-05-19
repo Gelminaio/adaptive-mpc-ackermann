@@ -1,0 +1,10 @@
+{
+    "name": "tasks",
+    "version": "1.0.0",
+    "build": {
+        "includeDir": ".",
+        "flags": [
+            "-I$PROJECT_DIR/include"
+        ]
+    }
+}
