@@ -1,5 +1,7 @@
 # Terrain-Adaptive Model Predictive Control for Autonomous Ackermann Vehicles
 
+![Vehicle Hero Shot](media/vehicle_photos/01_hero.jpg)
+
 [![Build](https://github.com/Gelminaio/adaptive-mpc-ackermann/actions/workflows/build.yml/badge.svg)](https://github.com/Gelminaio/adaptive-mpc-ackermann/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![ROS 2 Jazzy](https://img.shields.io/badge/ROS%202-Jazzy-blue)](https://docs.ros.org/en/jazzy/)
@@ -11,6 +13,21 @@ A 1:10 scale autonomous vehicle platform implementing **adaptive Nonlinear Model
 ## Abstract
 
 This project investigates terrain-adaptive trajectory tracking for small-scale autonomous ground vehicles. A Nonlinear MPC controller, formulated on an identified dynamic bicycle model, regulates trajectory tracking under nonholonomic Ackermann constraints. An online proprioceptive terrain classifier — operating on inertial measurements alone — estimates the surface type at runtime, and the MPC cost weights and constraints are adapted accordingly. The full stack runs distributed over a ROS 2 Jazzy network spanning an ESP32 real-time controller, a Raspberry Pi 4 perception bridge, and a base-station GPU host. Validation is performed both in simulation (sim-to-real pipeline) and on the physical platform across multiple terrain types.
+
+---
+
+## Vehicle Platform
+
+<table>
+  <tr>
+    <td width="50%"><img src="media/vehicle_photos/02_side_view.jpg" alt="Side view"/><br/><em>Side view — three-layer chassis with sensor stack, electronics, and battery</em></td>
+    <td width="50%"><img src="media/vehicle_photos/03_top_view.jpg" alt="Top view"/><br/><em>Top view — sensor and compute layout</em></td>
+  </tr>
+</table>
+
+<img src="media/vehicle_photos/04_electronics_detail.jpg" alt="Electronics detail" width="60%"/>
+
+*Electronics detail: ESP32 microcontroller with BNO085 9-DoF IMU (I2C), Raspberry Pi 4B host, and CSI camera interface.*
 
 ---
 
