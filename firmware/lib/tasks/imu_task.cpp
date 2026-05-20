@@ -1,27 +1,29 @@
 #include "imu_task.h"
 
 #include "config.h"
+#include "globals.h"
 
-namespace tasks {
+namespace tasks
+{
 
-void imu_task(void* params) {
-    (void)params;
+    void imu_task(void *params)
+    {
+        (void)params;
 
-    const TickType_t period_ticks = pdMS_TO_TICKS(PERIOD_IMU_MS);
-    TickType_t last_wake = xTaskGetTickCount();
+        const TickType_t period_ticks = pdMS_TO_TICKS(PERIOD_IMU_MS);
+        TickType_t last_wake = xTaskGetTickCount();
 
-    uint32_t heartbeat_counter = 0;
+        while (true)
+        {
+            // poll the IMU, read() is non-blocking, returns true if new data arrived.
+            if (g_imu.read())
+            {
+                // atomically update the shared state.
+                g_vehicle_state.imu = g_imu.getData();
+            }
 
-    while (true) {
-        // TODO (step 3.5): read BNO085 over I2C
-
-        if (++heartbeat_counter >= 200) { 
-            heartbeat_counter = 0;
-            Serial.printf("[imu] heartbeat @ %lu ms\n", millis());
+            vTaskDelayUntil(&last_wake, period_ticks);
         }
-
-        vTaskDelayUntil(&last_wake, period_ticks);
     }
-}
 
-}  
+}
