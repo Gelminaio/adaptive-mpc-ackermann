@@ -2,6 +2,15 @@
 
 #include <Arduino.h>
 
+// Safety state machine
+enum class SafetyState : uint8_t
+{
+    DISARMED = 0,  // boot state: motors hard-off, commands ignored
+    ARMED = 1,     // normal operation: commands accepted
+    SOFT_STOP = 2, // command timeout: ramping down to zero
+    EMERGENCY = 3  // stall or fault: motors hard-off until re-arm
+};
+
 // Shared state structures, protected by mutex when accessed.
 
 // Vehicle command (received from ROS via /cmd_vel)
@@ -56,5 +65,8 @@ struct VehicleState
     WheelState wheel_right;
     float steering_angle_deg = 0.0f;
     bool emergency_stop = false;
-    bool manual_duty_override = false; // when true, PID does not drive motors (just for diagnostics)
+    SafetyState safety_state = SafetyState::DISARMED;
+    uint32_t last_command_ms = 0;
+    const char *emergency_reason = ""; // why we entered EMERGENCY (for logging)
+    bool manual_duty_override = false; // just for diagnostics
 };

@@ -87,7 +87,18 @@ constexpr float PID_DEADBAND_MPS = 0.02f;
 // Control & safety limits
 constexpr float VEHICLE_MAX_LINEAR_VEL_MPS = 1.3f; // measured 1,37 m/s at full duty (raised vehicle)
 constexpr float VEHICLE_MAX_ANGULAR_VEL_RPS = 4.0f;
-constexpr uint32_t CMD_TIMEOUT_MS = 500;
+
+// Safety layer constants
+constexpr uint32_t SAFETY_CMD_TIMEOUT_MS = 10000; // if no command for this long => soft-stop
+constexpr float SAFETY_SOFTSTOP_RAMP_MPS_PER_S = 2.0f; // decel rate during a soft-stop
+
+// Stall detection
+constexpr float SAFETY_STALL_SETPOINT_MPS = 0.3f; // setpoint above which we expect motion
+constexpr float SAFETY_STALL_ACTUAL_MPS = 0.05f; // below this = "not moving"
+constexpr uint32_t SAFETY_STALL_TIME_MS = 500; // sustained stall before e-stop
+
+// Hardware Task Watchdog
+constexpr uint32_t SAFETY_TWDT_TIMEOUT_S = 1; // chip resets if a task starves > 1s
 
 // Task timing (periods in ms)
 constexpr uint32_t PERIOD_MOTOR_CONTROL_MS = 10;
