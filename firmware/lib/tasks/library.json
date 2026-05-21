@@ -5,10 +5,12 @@
         "includeDir": ".",
         "flags": [
             "-I$PROJECT_DIR/include",
-            "-I$PROJECT_DIR/lib/drivers"
+            "-I$PROJECT_DIR/lib/drivers",
+            "-I$PROJECT_DIR/lib/control"
         ]
     },
     "dependencies": {
-        "drivers": "*"
+        "drivers": "*",
+        "control": "*"
     }
 }

@@ -5,6 +5,7 @@
 #include "motor_driver.h"
 #include "encoder_driver.h"
 #include "imu_driver.h"
+#include "pid_controller.h"
 #include "config.h"
 #include "vehicle_state.h"
 
@@ -21,6 +22,8 @@ drivers::MotorDriver g_motor_right(PIN_MOTOR_R_PWM_FWD, PIN_MOTOR_R_PWM_REV, MOT
 drivers::EncoderDriver g_encoder_left(PIN_ENCODER_L_A, PIN_ENCODER_L_B, ENCODER_L_PCNT_UNIT, "left", true);
 drivers::EncoderDriver g_encoder_right(PIN_ENCODER_R_A, PIN_ENCODER_R_B, ENCODER_R_PCNT_UNIT, "right");
 drivers::ImuDriver g_imu(BNO085_I2C_ADDRESS, I2C_FREQUENCY_HZ);
+control::PIDController g_pid_left(PID_KP_INITIAL, PID_KI_INITIAL, PID_KD_INITIAL, PERIOD_MOTOR_CONTROL_MS / 1000.0f, PID_INTEGRAL_CLAMP, PID_OUTPUT_MIN, PID_OUTPUT_MAX);
+control::PIDController g_pid_right(PID_KP_INITIAL, PID_KI_INITIAL, PID_KD_INITIAL, PERIOD_MOTOR_CONTROL_MS / 1000.0f, PID_INTEGRAL_CLAMP, PID_OUTPUT_MIN, PID_OUTPUT_MAX);
 VehicleState g_vehicle_state;
 VehicleCommand g_vehicle_command;
 
@@ -61,7 +64,8 @@ void setup()
         Serial.println("FATAL: right encoder init failed");
     }
     // IMU
-    if (!g_imu.begin()) {
+    if (!g_imu.begin())
+    {
         Serial.println("FATAL: IMU init failed");
     }
     // Create FreeRTOS tasks

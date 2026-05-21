@@ -21,6 +21,7 @@ namespace drivers
 
         float getVelocityTicksPerSec();
         float getVelocityMps();
+        float getVelocityMpsFiltered(float ema_alpha);
         void resetCount();
 
     private:
@@ -31,6 +32,8 @@ namespace drivers
         const pcnt_unit_t unit_;
         const char *label_;
         const bool invert_;
+        float ema_velocity_tps_ = 0.0f;
+        bool ema_initialized_ = false;
         portMUX_TYPE mux_ = portMUX_INITIALIZER_UNLOCKED;
 
         volatile int32_t overflow_count_ = 0;

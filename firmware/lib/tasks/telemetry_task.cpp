@@ -49,8 +49,8 @@ namespace tasks
             // Encoders
             const int32_t cl = g_encoder_left.getCount();
             const int32_t cr = g_encoder_right.getCount();
-            const float vl = g_encoder_left.getVelocityMps();
-            const float vr = g_encoder_right.getVelocityMps();
+            const float vl = g_vehicle_state.wheel_left.velocity_mps;
+            const float vr = g_vehicle_state.wheel_right.velocity_mps;
 
             // IMU
             const ImuData &imu = g_vehicle_state.imu;

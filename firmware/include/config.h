@@ -24,7 +24,7 @@ constexpr int PIN_ENCODER_L_B = 39;
 
 // Encoder driver constants
 constexpr uint16_t ENCODER_GLITCH_FILTER_NS = 1000; // ignore pulses <1us (motor noise rejection)
-constexpr uint32_t ENCODER_VELOCITY_WINDOW_MS = 20; // velocity computed over this window
+constexpr uint32_t ENCODER_VELOCITY_WINDOW_MS = 40; // velocity computed over this window
 
 // PCNT unit assignments (ESP32 has 8 PCNT units: 0-7)
 constexpr int ENCODER_R_PCNT_UNIT = 0;
@@ -50,7 +50,7 @@ constexpr int MOTOR_L_REV_LEDC_CHANNEL = 5;
 // Motor control constants
 constexpr int16_t MOTOR_DUTY_MAX = 1023;
 constexpr int16_t MOTOR_DUTY_MIN = -1023;
-constexpr uint32_t MOTOR_DEAD_TIME_MS = 50;
+constexpr uint32_t MOTOR_DEAD_TIME_MS = 2;
 
 // LED
 constexpr int PIN_LED = 2;
@@ -70,19 +70,31 @@ constexpr int ENCODER_TICKS_PER_REV = 660; // measured (specific for my motor)
 constexpr float GEAR_RATIO = 1.0f;
 
 // IMU driver constants
-constexpr uint16_t IMU_REPORT_INTERVAL_MS = 5; //200hz
+constexpr uint16_t IMU_REPORT_INTERVAL_MS = 5; // 200hz
+
+// PID velocity controller — initial gains (refined via tuning)
+constexpr float PID_KP_INITIAL = 1500.0f; // tuned manually, validated 0.2/0.5/1.0 m/s (rise time of about 260ms, almost 0 overshoot, steady state of +- 0,4%)
+constexpr float PID_KI_INITIAL = 6000.0f;
+constexpr float PID_KD_INITIAL = 30.0f; // small D on EMA-filtered measurement
+
+constexpr float PID_INTEGRAL_CLAMP = 800.0f;
+
+constexpr int16_t PID_OUTPUT_MIN = -1023;
+constexpr int16_t PID_OUTPUT_MAX = +1023;
+
+constexpr float PID_DEADBAND_MPS = 0.02f;
 
 // Control & safety limits
-constexpr float VEHICLE_MAX_LINEAR_VEL_MPS = 0.3f;
-constexpr float VEHICLE_MAX_ANGULAR_VEL_RPS = 1.0f;
+constexpr float VEHICLE_MAX_LINEAR_VEL_MPS = 1.3f; // measured 1,37 m/s at full duty (raised vehicle)
+constexpr float VEHICLE_MAX_ANGULAR_VEL_RPS = 4.0f;
 constexpr uint32_t CMD_TIMEOUT_MS = 500;
 
 // Task timing (periods in ms)
 constexpr uint32_t PERIOD_MOTOR_CONTROL_MS = 10;
-constexpr uint32_t PERIOD_IMU_MS = 5; //polling frequency (diffent from IMU_REPORT_INTERVAL_MS)
+constexpr uint32_t PERIOD_IMU_MS = 5; // polling frequency (diffent from IMU_REPORT_INTERVAL_MS)
 constexpr uint32_t PERIOD_COMMS_MS = 20;
 constexpr uint32_t PERIOD_SAFETY_MS = 20;
-constexpr uint32_t PERIOD_TELEMETRY_MS = 100;
+constexpr uint32_t PERIOD_TELEMETRY_MS = 20; // 50hz (temp, will be changed)
 
 // Task stack sizes (bytes) and priorities (0 = lowest, 24 = highest)
 constexpr uint32_t STACK_MOTOR_CONTROL = 4096;

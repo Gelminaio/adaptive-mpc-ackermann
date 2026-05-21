@@ -11,7 +11,7 @@ namespace drivers
 
     bool ImuDriver::begin()
     {
-        // I2C initialization  
+        // I2C initialization
         Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL, i2c_frequency_hz_);
 
         if (!imu_.begin(i2c_address_, Wire))
@@ -24,7 +24,7 @@ namespace drivers
         Wire.setClock(i2c_frequency_hz_);
 
         // Enable the three reports we need, all at 200 Hz.
-        imu_.enableGameRotationVector(IMU_REPORT_INTERVAL_MS); //I use Game Rotation Vector instead of Rotation Vector because it does not use magnetometer data, which is very noisy on our platform and causes bad fusion performance.
+        imu_.enableGameRotationVector(IMU_REPORT_INTERVAL_MS);  // I use Game Rotation Vector instead of Rotation Vector because it does not use magnetometer data, which is very noisy on our platform and causes bad fusion performance.
         imu_.enableLinearAccelerometer(IMU_REPORT_INTERVAL_MS); // accel w/o gravity
         imu_.enableGyro(IMU_REPORT_INTERVAL_MS);                // calibrated gyro
 
