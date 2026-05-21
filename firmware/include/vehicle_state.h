@@ -14,11 +14,13 @@ struct VehicleCommand
     bool armed = false;
 };
 
-// Per-wheel measured state
+// Per-wheel measured + commanded state
 struct WheelState
 {
     int32_t encoder_ticks = 0;
     float velocity_mps = 0.0f;
+    float velocity_setpoint_mps = 0.0f;
+    int16_t pwm_duty = 0;
 };
 
 // IMU measurement (BNO085 already fused)
@@ -54,4 +56,5 @@ struct VehicleState
     WheelState wheel_right;
     float steering_angle_deg = 0.0f;
     bool emergency_stop = false;
+    bool manual_duty_override = false; // when true, PID does not drive motors (just for diagnostics)
 };

@@ -129,6 +129,44 @@ namespace drivers
         return wheel_rad_per_sec * WHEEL_RADIUS_M;
     }
 
+    float EncoderDriver::getVelocityMpsFiltered(float ema_alpha)
+    {
+        const uint32_t now_ms = millis();
+        const int32_t now_count = getCount();
+
+        const uint32_t dt_ms = now_ms - last_time_for_vel_ms_;
+        if (dt_ms == 0)
+        {
+            const float wheel_rad_per_sec =
+                (ema_velocity_tps_ * 2.0f * PI) /
+                (static_cast<float>(ENCODER_TICKS_PER_REV) * GEAR_RATIO);
+            return wheel_rad_per_sec * WHEEL_RADIUS_M;
+        }
+
+        const int32_t dcount = now_count - last_count_for_vel_;
+        const float raw_tps = (1000.0f * static_cast<float>(dcount)) / static_cast<float>(dt_ms);
+
+        // exponential moving average filter
+        if (!ema_initialized_)
+        {
+            ema_velocity_tps_ = raw_tps;
+            ema_initialized_ = true;
+        }
+        else
+        {
+            ema_velocity_tps_ = ema_alpha * raw_tps + (1.0f - ema_alpha) * ema_velocity_tps_;
+        }
+
+        last_count_for_vel_ = now_count;
+        last_time_for_vel_ms_ = now_ms;
+
+        // convert filtered ticks/s to m/s
+        const float wheel_rad_per_sec =
+            (ema_velocity_tps_ * 2.0f * PI) /
+            (static_cast<float>(ENCODER_TICKS_PER_REV) * GEAR_RATIO);
+        return wheel_rad_per_sec * WHEEL_RADIUS_M;
+    }
+
     void EncoderDriver::resetCount()
     {
         portENTER_CRITICAL(&mux_);
