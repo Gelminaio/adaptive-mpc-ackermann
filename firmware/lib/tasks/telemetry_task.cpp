@@ -63,12 +63,13 @@ namespace tasks
             Serial.printf("TELEM,%lu,%ld,%ld,%.3f,%.3f,"
                           "%.2f,%.2f,%.2f,"
                           "%.3f,%.3f,%.3f,"
-                          "%.3f,%.3f,%.3f,%u\n",
+                          "%.3f,%.3f,%.3f,%u,%d\n",
                           t_ms, cl, cr, vl, vr,
                           yaw_deg, pitch_deg, roll_deg,
                           imu.lin_acc_x, imu.lin_acc_y, imu.lin_acc_z,
                           imu.gyro_x, imu.gyro_y, imu.gyro_z,
-                          imu.accuracy);
+                          imu.accuracy,
+                          static_cast<int>(g_vehicle_state.safety_state));
 
             vTaskDelayUntil(&last_wake, period_ticks);
         }

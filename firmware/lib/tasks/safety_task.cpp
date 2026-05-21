@@ -1,27 +1,35 @@
 #include "safety_task.h"
 
 #include "config.h"
+#include "globals.h"
 
-namespace tasks {
+#include <math.h>
+#include "esp_task_wdt.h"
 
-void safety_task(void* params) {
-    (void)params;
+namespace tasks
+{
 
-    const TickType_t period_ticks = pdMS_TO_TICKS(PERIOD_SAFETY_MS);
-    TickType_t last_wake = xTaskGetTickCount();
+    void safety_task(void *params)
+    {
+        (void)params;
 
-    uint32_t heartbeat_counter = 0;
+        const TickType_t period_ticks = pdMS_TO_TICKS(PERIOD_SAFETY_MS);
+        TickType_t last_wake = xTaskGetTickCount();
 
-    while (true) {
-        // TODO (step 3.7): watchdog feed, cmd_vel timeout check, emergency stop
+        // subscribe this task to the Task Watchdog Timer.
+        esp_task_wdt_add(NULL);
 
-        if (++heartbeat_counter >= 50) {  
-            heartbeat_counter = 0;
-            Serial.printf("[safety] heartbeat @ %lu ms\n", millis());
+        while (true)
+        {
+            // feed the hardware watchdog: proves this task is alive.
+            esp_task_wdt_reset();
+
+            const uint32_t now_ms = millis();
+
+            g_safety.update(now_ms, g_vehicle_state.wheel_left.velocity_mps, g_vehicle_state.wheel_left.velocity_setpoint_mps, g_vehicle_state.wheel_right.velocity_mps, g_vehicle_state.wheel_right.velocity_setpoint_mps);
+            g_vehicle_state.safety_state = g_safety.state();
+
+            vTaskDelayUntil(&last_wake, period_ticks);
         }
-
-        vTaskDelayUntil(&last_wake, period_ticks);
     }
 }
-
-} 

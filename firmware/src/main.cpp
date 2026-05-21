@@ -15,6 +15,8 @@
 #include "safety_task.h"
 #include "telemetry_task.h"
 
+#include "esp_task_wdt.h"
+
 // global shared state, in future steps will be protected with mutex.
 drivers::ServoDriver g_servo;
 drivers::MotorDriver g_motor_left(PIN_MOTOR_L_PWM_FWD, PIN_MOTOR_L_PWM_REV, MOTOR_L_FWD_LEDC_CHANNEL, MOTOR_L_REV_LEDC_CHANNEL, "left", true);
@@ -24,6 +26,7 @@ drivers::EncoderDriver g_encoder_right(PIN_ENCODER_R_A, PIN_ENCODER_R_B, ENCODER
 drivers::ImuDriver g_imu(BNO085_I2C_ADDRESS, I2C_FREQUENCY_HZ);
 control::PIDController g_pid_left(PID_KP_INITIAL, PID_KI_INITIAL, PID_KD_INITIAL, PERIOD_MOTOR_CONTROL_MS / 1000.0f, PID_INTEGRAL_CLAMP, PID_OUTPUT_MIN, PID_OUTPUT_MAX);
 control::PIDController g_pid_right(PID_KP_INITIAL, PID_KI_INITIAL, PID_KD_INITIAL, PERIOD_MOTOR_CONTROL_MS / 1000.0f, PID_INTEGRAL_CLAMP, PID_OUTPUT_MIN, PID_OUTPUT_MAX);
+control::SafetySupervisor g_safety;
 VehicleState g_vehicle_state;
 VehicleCommand g_vehicle_command;
 
@@ -31,6 +34,7 @@ VehicleCommand g_vehicle_command;
 void setup()
 {
     Serial.begin(115200);
+    esp_task_wdt_init(SAFETY_TWDT_TIMEOUT_S, true); 
     delay(500);
     Serial.println("\n=== Adaptive MPC Ackermann — Firmware Boot ===");
     Serial.printf("ESP-IDF: %s\n", esp_get_idf_version());

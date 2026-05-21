@@ -5,6 +5,7 @@
 #include "encoder_driver.h"
 #include "imu_driver.h"
 #include "pid_controller.h"
+#include "safety_supervisor.h"
 #include "vehicle_state.h"
 
 extern drivers::ServoDriver g_servo;
@@ -16,6 +17,7 @@ extern drivers::ImuDriver g_imu;
 
 extern control::PIDController g_pid_left;
 extern control::PIDController g_pid_right;
+extern control::SafetySupervisor g_safety;
 
 extern VehicleCommand g_vehicle_command;
 extern VehicleState g_vehicle_state;

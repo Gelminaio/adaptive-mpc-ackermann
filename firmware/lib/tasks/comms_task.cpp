@@ -17,6 +17,23 @@ namespace tasks
         String args = trimmed.substring(1);
         args.trim();
 
+        // entire word commands (checked before single character switch)
+        if (trimmed == "arm")
+        {
+            g_safety.arm();
+            return;
+        }
+        if (trimmed == "disarm")
+        {
+            g_safety.disarm();
+            return;
+        }
+        if (trimmed == "clear")
+        {
+            g_safety.clearEmergency();
+            return;
+        }
+
         switch (cmd)
         {
         case 's':
@@ -85,7 +102,6 @@ namespace tasks
         }
         case 'v':
         {
-            // set velocity setpoint for both wheels
             float vl = 0.0f, vr = 0.0f;
             const int parsed = sscanf(args.c_str(), "%f %f", &vl, &vr);
             if (parsed != 2)
@@ -93,18 +109,41 @@ namespace tasks
                 Serial.println("[comms] usage: v <left_mps> <right_mps>");
                 break;
             }
-            // clamp to safety limits
-            if (vl > VEHICLE_MAX_LINEAR_VEL_MPS)
-                vl = VEHICLE_MAX_LINEAR_VEL_MPS;
-            if (vl < -VEHICLE_MAX_LINEAR_VEL_MPS)
-                vl = -VEHICLE_MAX_LINEAR_VEL_MPS;
-            if (vr > VEHICLE_MAX_LINEAR_VEL_MPS)
-                vr = VEHICLE_MAX_LINEAR_VEL_MPS;
-            if (vr < -VEHICLE_MAX_LINEAR_VEL_MPS)
-                vr = -VEHICLE_MAX_LINEAR_VEL_MPS;
+            // Hard limits: clip with warning
+            auto clip = [](float v, const char *name)
+            {
+                if (v > VEHICLE_MAX_LINEAR_VEL_MPS)
+                {
+                    Serial.printf("[safety] %s setpoint CLIPPED %.2f -> %.2f m/s\n",
+                                  name, v, VEHICLE_MAX_LINEAR_VEL_MPS);
+                    return VEHICLE_MAX_LINEAR_VEL_MPS;
+                }
+                if (v < -VEHICLE_MAX_LINEAR_VEL_MPS)
+                {
+                    Serial.printf("[safety] %s setpoint CLIPPED %.2f -> %.2f m/s\n",
+                                  name, v, -VEHICLE_MAX_LINEAR_VEL_MPS);
+                    return -VEHICLE_MAX_LINEAR_VEL_MPS;
+                }
+                return v;
+            };
+            vl = clip(vl, "left");
+            vr = clip(vr, "right");
+
             g_vehicle_state.wheel_left.velocity_setpoint_mps = vl;
             g_vehicle_state.wheel_right.velocity_setpoint_mps = vr;
-            Serial.printf("[comms] velocity setpoints: L=%.3f R=%.3f m/s\n", vl, vr);
+            g_safety.notifyCommand(millis()); // reset command timeout
+
+            if (!g_safety.motionAllowed())
+            {
+                Serial.printf("[comms] setpoints stored (L=%.2f R=%.2f) but state is %s — send 'arm'\n",
+                              vl, vr,
+                              g_vehicle_state.safety_state == SafetyState::DISARMED ? "DISARMED" : g_vehicle_state.safety_state == SafetyState::EMERGENCY ? "EMERGENCY"
+                                                                                                                                                          : "STOP");
+            }
+            else
+            {
+                Serial.printf("[comms] velocity setpoints: L=%.3f R=%.3f m/s\n", vl, vr);
+            }
             break;
         }
         case 'p':
@@ -146,10 +185,8 @@ namespace tasks
         }
         case '?':
         {
-            Serial.printf("[comms] servo=%.2f deg, motor L=%d, motor R=%d\n",
-                          g_servo.getAngle(),
-                          g_motor_left.getDuty(),
-                          g_motor_right.getDuty());
+            const char *state_str = g_vehicle_state.safety_state == SafetyState::DISARMED ? "DISARMED" : g_vehicle_state.safety_state == SafetyState::ARMED   ? "ARMED": g_vehicle_state.safety_state == SafetyState::SOFT_STOP ? "SOFT_STOP": "EMERGENCY";
+            Serial.printf("[comms] state=%s, servo=%.2f deg, motor L=%d R=%d\n",state_str,g_servo.getAngle(),g_motor_left.getDuty(),g_motor_right.getDuty());
             break;
         }
         default:
@@ -169,6 +206,8 @@ namespace tasks
         uint32_t heartbeat_counter = 0;
 
         Serial.println("[comms] ready. Commands:");
+        Serial.println("[comms]   arm / disarm        → enable / disable motion");
+        Serial.println("[comms]   clear               → clear emergency state");
         Serial.println("[comms]   s <angle>          → steering angle (deg)");
         Serial.println("[comms]   m <left> <right>   → motor duty (-1023..+1023)");
         Serial.println("[comms]   e                  → print encoder state");
