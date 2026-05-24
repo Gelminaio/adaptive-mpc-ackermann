@@ -21,7 +21,7 @@ bool MotorDriver::begin() {
     const double f1 = ledcSetup(ch_fwd_, MOTOR_PWM_FREQ_HZ, MOTOR_PWM_RESOLUTION);
     const double f2 = ledcSetup(ch_rev_, MOTOR_PWM_FREQ_HZ, MOTOR_PWM_RESOLUTION);
     if (f1 == 0 || f2 == 0) {
-        Serial.printf("[motor %s] ERROR: ledcSetup failed\n", label_);
+        LOGLN("[motor %s] ERROR: ledcSetup failed\n", label_);
         return false;
     }
 
@@ -31,7 +31,7 @@ bool MotorDriver::begin() {
     coast();
 
     initialized_ = true;
-    Serial.printf("[motor %s] initialized on pins fwd=%d rev=%d, ch %d/%d, %u Hz, %u-bit\n",
+    LOGLN("[motor %s] initialized on pins fwd=%d rev=%d, ch %d/%d, %u Hz, %u-bit\n",
                   label_, pin_fwd_, pin_rev_, ch_fwd_, ch_rev_,
                   MOTOR_PWM_FREQ_HZ, MOTOR_PWM_RESOLUTION);
     return true;

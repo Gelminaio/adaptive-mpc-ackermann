@@ -16,7 +16,7 @@ namespace drivers
 
         if (!imu_.begin(i2c_address_, Wire))
         {
-            Serial.printf("[imu] ERROR: BNO085 not responding at 0x%02X\n",
+            LOGLN("[imu] ERROR: BNO085 not responding at 0x%02X\n",
                           i2c_address_);
             return false;
         }
@@ -29,7 +29,7 @@ namespace drivers
         imu_.enableGyro(IMU_REPORT_INTERVAL_MS);                // calibrated gyro
 
         initialized_ = true;
-        Serial.printf("[imu] BNO085 initialized at 0x%02X, reports @ %u ms (%u Hz)\n",
+        LOGLN("[imu] BNO085 initialized at 0x%02X, reports @ %u ms (%u Hz)\n",
                       i2c_address_,
                       IMU_REPORT_INTERVAL_MS,
                       1000U / IMU_REPORT_INTERVAL_MS);

@@ -60,7 +60,7 @@ namespace tasks
             const float pitch_deg = pitch_rad * 180.0f / static_cast<float>(M_PI);
             const float roll_deg = roll_rad * 180.0f / static_cast<float>(M_PI);
 
-            Serial.printf("TELEM,%lu,%ld,%ld,%.3f,%.3f,"
+            LOG("TELEM,%lu,%ld,%ld,%.3f,%.3f,"
                           "%.2f,%.2f,%.2f,"
                           "%.3f,%.3f,%.3f,"
                           "%.3f,%.3f,%.3f,%u,%d\n",

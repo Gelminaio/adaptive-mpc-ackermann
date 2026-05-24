@@ -3,9 +3,14 @@
 #include "config.h"
 #include "globals.h"
 
+#if USE_MICROROS
+#include "microros_node.h"
+static comms::MicroRosNode g_microros;
+#endif
+
 namespace tasks
 {
-
+#if !USE_MICROROS
     static void process_line(const String &line)
     {
         String trimmed = line;
@@ -185,8 +190,10 @@ namespace tasks
         }
         case '?':
         {
-            const char *state_str = g_vehicle_state.safety_state == SafetyState::DISARMED ? "DISARMED" : g_vehicle_state.safety_state == SafetyState::ARMED   ? "ARMED": g_vehicle_state.safety_state == SafetyState::SOFT_STOP ? "SOFT_STOP": "EMERGENCY";
-            Serial.printf("[comms] state=%s, servo=%.2f deg, motor L=%d R=%d\n",state_str,g_servo.getAngle(),g_motor_left.getDuty(),g_motor_right.getDuty());
+            const char *state_str = g_vehicle_state.safety_state == SafetyState::DISARMED ? "DISARMED" : g_vehicle_state.safety_state == SafetyState::ARMED   ? "ARMED"
+                                                                                                     : g_vehicle_state.safety_state == SafetyState::SOFT_STOP ? "SOFT_STOP"
+                                                                                                                                                              : "EMERGENCY";
+            Serial.printf("[comms] state=%s, servo=%.2f deg, motor L=%d R=%d\n", state_str, g_servo.getAngle(), g_motor_left.getDuty(), g_motor_right.getDuty());
             break;
         }
         default:
@@ -194,6 +201,7 @@ namespace tasks
             break;
         }
     }
+#endif
 
     void comms_task(void *params)
     {
@@ -201,7 +209,16 @@ namespace tasks
 
         const TickType_t period_ticks = pdMS_TO_TICKS(PERIOD_COMMS_MS);
         TickType_t last_wake = xTaskGetTickCount();
+#if USE_MICROROS
+        // micro-ROS owns the serial port; no Serial.print anywhere here.
+        g_microros.begin();
 
+        while (true)
+        {
+            g_microros.spinOnce();
+            vTaskDelayUntil(&last_wake, period_ticks);
+        }
+#else
         String line_buffer;
         uint32_t heartbeat_counter = 0;
 
@@ -248,6 +265,6 @@ namespace tasks
 
             vTaskDelayUntil(&last_wake, period_ticks);
         }
+#endif
     }
-
 }
