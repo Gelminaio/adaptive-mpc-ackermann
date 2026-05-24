@@ -48,7 +48,7 @@ This project investigates terrain-adaptive trajectory tracking for small-scale a
 
 The system is organized in three computational tiers:
 
-- **ESP32 (real-time layer)** — low-level motor PID, encoder reading, IMU acquisition, servo control. Communicates with the RPi via micro-ROS over USB serial.
+- **ESP32 (real-time layer)** — FreeRTOS firmware running per-wheel velocity PID at 100 Hz, hardware quadrature encoder reading, BNO085 IMU acquisition, Ackermann servo control, and a safety supervisor (ARMED/DISARMED state machine, command-timeout soft-stop, per-wheel stall detection, hardware task watchdog). Exposes a micro-ROS node over USB serial publishing `/joint_states` and `/imu/data_raw`, subscribing to `/cmd_vel` (inverse Ackermann) and `/arm`.
 - **Raspberry Pi 4 (perception bridge)** — camera capture and compression, LIDAR driver, micro-ROS agent, ROS 2 networking over WiFi.
 - **Base station (Ubuntu 24.04 desktop)** — heavy compute: SLAM, perception, NMPC solver, terrain classifier, simulation, RViz visualization.
 
@@ -111,7 +111,7 @@ adaptive-mpc-ackermann/
 
 ## Getting Started
 
-> 📌 **TODO**: complete this section once Phase 2 (ROS 2 bridge) is done.
+> 📌 **TODO**: expand with full deployment instructions as the ROS 2 stack (Phase 4+) comes online. Firmware build/flash and the micro-ROS agent workflow are functional.
 
 ### Prerequisites
 
@@ -144,7 +144,7 @@ The project is structured in 12 incremental phases, from physical hardware assem
 
 - [x] **Phase 1** — Hardware assembly & electrical integration
 - [x] **Phase 2** — Infrastructure & repository setup
-- [ ] **Phase 3** — ESP32 firmware: motor drivers, PID, IMU, micro-ROS
+- [x] **Phase 3** — ESP32 firmware: motor drivers, PID, IMU, micro-ROS
 - [ ] **Phase 4** — ROS 2 bridge & sensor pipelines
 - [ ] **Phase 5** — Vehicle dynamic modeling & system identification
 - [ ] **Phase 6** — State estimation (EKF)
