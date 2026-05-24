@@ -18,7 +18,7 @@ bool ServoDriver::begin() {
     );
 
     if (actual_freq == 0) {
-        Serial.println("[servo] ERROR: ledcSetup failed");
+        LOGLN("[servo] ERROR: ledcSetup failed");
         return false;
     }
 
@@ -29,10 +29,10 @@ bool ServoDriver::begin() {
 
     initialized_ = true;
 
-    Serial.printf("[servo] initialized on GPIO %d, LEDC ch %d, %u Hz, %u-bit\n",
+    LOGLN("[servo] initialized on GPIO %d, LEDC ch %d, %u Hz, %u-bit\n",
                   PIN_SERVO_STEERING, SERVO_LEDC_CHANNEL,
                   SERVO_PWM_FREQ_HZ, SERVO_PWM_RESOLUTION);
-    Serial.printf("[servo] pulse calibration: %u / %u / %u us (left/center/right)\n",
+    LOGLN("[servo] pulse calibration: %u / %u / %u us (left/center/right)\n",
                   SERVO_PULSE_LEFT_US, SERVO_PULSE_CENTER_US, SERVO_PULSE_RIGHT_US);
 
     return true;

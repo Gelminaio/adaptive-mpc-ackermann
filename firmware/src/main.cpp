@@ -34,11 +34,11 @@ VehicleCommand g_vehicle_command;
 void setup()
 {
     Serial.begin(115200);
-    esp_task_wdt_init(SAFETY_TWDT_TIMEOUT_S, true); 
+    esp_task_wdt_init(SAFETY_TWDT_TIMEOUT_S, true);
     delay(500);
-    Serial.println("\n=== Adaptive MPC Ackermann — Firmware Boot ===");
-    Serial.printf("ESP-IDF: %s\n", esp_get_idf_version());
-    Serial.printf("Free heap: %u bytes\n", ESP.getFreeHeap());
+    LOGLN("\n=== Adaptive MPC Ackermann — Firmware Boot ===");
+    LOG("ESP-IDF: %s\n", esp_get_idf_version());
+    LOG("Free heap: %u bytes\n", ESP.getFreeHeap());
 
     pinMode(PIN_LED, OUTPUT);
     digitalWrite(PIN_LED, HIGH);
@@ -47,30 +47,30 @@ void setup()
     // servo
     if (!g_servo.begin())
     {
-        Serial.println("FATAL: servo driver init failed");
+        LOGLN("FATAL: servo driver init failed");
     }
     // motors left and right
     if (!g_motor_left.begin())
     {
-        Serial.println("FATAL: left motor driver init failed");
+        LOGLN("FATAL: left motor driver init failed");
     }
     if (!g_motor_right.begin())
     {
-        Serial.println("FATAL: right motor driver init failed");
+        LOGLN("FATAL: right motor driver init failed");
     }
     // encoders left and right
     if (!g_encoder_left.begin())
     {
-        Serial.println("FATAL: left encoder init failed");
+        LOGLN("FATAL: left encoder init failed");
     }
     if (!g_encoder_right.begin())
     {
-        Serial.println("FATAL: right encoder init failed");
+        LOGLN("FATAL: right encoder init failed");
     }
     // IMU
     if (!g_imu.begin())
     {
-        Serial.println("FATAL: IMU init failed");
+        LOGLN("FATAL: IMU init failed");
     }
     // Create FreeRTOS tasks
     xTaskCreatePinnedToCore(
@@ -103,7 +103,7 @@ void setup()
         PRIO_TELEMETRY, nullptr,
         CORE_COMMS);
 
-    Serial.println("All tasks created. Entering idle.\n");
+    LOGLN("All tasks created. Entering idle.\n");
 }
 
 void loop()

@@ -38,7 +38,7 @@ namespace drivers
         esp_err_t err = pcnt_unit_config(&cfg);
         if (err != ESP_OK)
         {
-            Serial.printf("[encoder %s] ERROR: pcnt_unit_config failed (%d)\n",
+            LOGLN("[encoder %s] ERROR: pcnt_unit_config failed (%d)\n",
                           label_, err);
             return false;
         }
@@ -65,7 +65,7 @@ namespace drivers
         last_time_for_vel_ms_ = millis();
         initialized_ = true;
 
-        Serial.printf("[encoder %s] initialized on pins A=%d B=%d, PCNT unit %d, glitch filter %u ns\n",
+        LOGLN("[encoder %s] initialized on pins A=%d B=%d, PCNT unit %d, glitch filter %u ns\n",
                       label_, pin_a_, pin_b_, static_cast<int>(unit_),
                       ENCODER_GLITCH_FILTER_NS);
         return true;

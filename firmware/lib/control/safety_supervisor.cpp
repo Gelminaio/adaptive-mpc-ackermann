@@ -2,25 +2,33 @@
 
 #include "config.h"
 
+#if USE_MICROROS
+#define SAFETY_LOG(x) ((void)0)
+#define SAFETY_LOGF(...) ((void)0)
+#else
+#define SAFETY_LOG(x) Serial.println(x)
+#define SAFETY_LOGF(...) Serial.printf(__VA_ARGS__)
+#endif
+
 namespace control
 {
     void SafetySupervisor::arm()
     {
         if (state_ == SafetyState::EMERGENCY)
         {
-            Serial.println("[safety] cannot ARM: clear emergency first ('clear')");
+            SAFETY_LOG("[safety] cannot ARM: clear emergency first ('clear')");
             return;
         }
         state_ = SafetyState::ARMED;
         reason_ = "";
-        Serial.println("[safety] state -> ARMED");
+        SAFETY_LOG("[safety] state -> ARMED");
     }
 
     void SafetySupervisor::disarm()
     {
         state_ = SafetyState::DISARMED;
         reason_ = "";
-        Serial.println("[safety] state -> DISARMED");
+        SAFETY_LOG("[safety] state -> DISARMED");
     }
 
     void SafetySupervisor::clearEmergency()
@@ -30,7 +38,7 @@ namespace control
             state_ = SafetyState::DISARMED;
             reason_ = "";
             stall_active_ = false;
-            Serial.println("[safety] emergency cleared -> DISARMED (send 'arm' to enable)");
+            SAFETY_LOG("[safety] emergency cleared -> DISARMED (send 'arm' to enable)");
         }
     }
 
@@ -56,7 +64,7 @@ namespace control
             {
                 state_ = SafetyState::SOFT_STOP;
                 reason_ = "command timeout";
-                Serial.println("[safety] command timeout -> SOFT_STOP");
+                SAFETY_LOG("[safety] command timeout -> SOFT_STOP");
                 break;
             }
 
@@ -80,8 +88,8 @@ namespace control
                     state_ = SafetyState::EMERGENCY;
                     reason_ = left_stalled ? "stall: left wheel" : "stall: right wheel";
                     stall_active_ = false;
-                    Serial.printf("[safety] STALL (%s) -> EMERGENCY (motors locked)\n",
-                                  reason_);
+                    SAFETY_LOGF("[safety] STALL (%s) -> EMERGENCY (motors locked)\n",
+                                reason_);
                 }
             }
             else
@@ -96,7 +104,7 @@ namespace control
             {
                 state_ = SafetyState::ARMED;
                 reason_ = "";
-                Serial.println("[safety] command resumed -> ARMED");
+                SAFETY_LOG("[safety] command resumed -> ARMED");
             }
             break;
         }
