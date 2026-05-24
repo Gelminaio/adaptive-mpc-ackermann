@@ -1,6 +1,8 @@
 #include "microros_node.h"
 
 #include "config.h"
+#if USE_MICROROS
+
 #include "globals.h"
 
 #include <micro_ros_platformio.h>
@@ -230,3 +232,4 @@ namespace comms
         }
     }
 }
+#endif

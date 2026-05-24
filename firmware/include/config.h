@@ -1,14 +1,16 @@
 #pragma once
 
 // Set to 1 to use micro-ROS, 0 to use the legacy serial command parser (just for debug)
+#ifndef USE_MICROROS
 #define USE_MICROROS 1
+#endif
 
 #if USE_MICROROS
 #define LOG(...) ((void)0)
 #define LOGLN(...) ((void)0)
 #else
 #define LOG(...) Serial.printf(__VA_ARGS__)
-#define LOGLN(...) Serial.println(__VA_ARGS__)
+#define LOGLN(...) Serial.printf(__VA_ARGS__)
 #endif
 
 // config.h — pinout, hardware constants, timings.
@@ -100,7 +102,7 @@ constexpr float VEHICLE_MAX_LINEAR_VEL_MPS = 1.3f; // measured 1,37 m/s at full 
 constexpr float VEHICLE_MAX_ANGULAR_VEL_RPS = 4.0f;
 
 // Safety layer constants
-constexpr uint32_t SAFETY_CMD_TIMEOUT_MS = 500;      // if no command for this long => soft-stop
+constexpr uint32_t SAFETY_CMD_TIMEOUT_MS = 500;        // if no command for this long => soft-stop
 constexpr float SAFETY_SOFTSTOP_RAMP_MPS_PER_S = 2.0f; // decel rate during a soft-stop
 
 // Stall detection
