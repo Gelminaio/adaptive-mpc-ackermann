@@ -32,7 +32,7 @@ jobs:
 
       - name: Build firmware
         working-directory: firmware
-        run: pio run
+        run: pio run -e ci
 
   ros2-build:
     name: ROS 2 Packages (colcon)

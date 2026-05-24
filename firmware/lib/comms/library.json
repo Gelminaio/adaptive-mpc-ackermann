@@ -1,0 +1,16 @@
+{
+    "name": "comms",
+    "version": "1.0.0",
+    "build": {
+        "includeDir": ".",
+        "flags": [
+            "-I$PROJECT_DIR/include",
+            "-I$PROJECT_DIR/lib/drivers",
+            "-I$PROJECT_DIR/lib/control"
+        ]
+    },
+    "dependencies": {
+        "drivers": "*",
+        "control": "*"
+    }
+}
